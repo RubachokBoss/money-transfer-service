@@ -1,0 +1,1727 @@
+﻿
+================================================================================
+ФАЙЛ: C:\Users\water\money-transfer-service\docker-compose.yml
+================================================================================
+
+version: '3.8'
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: money_transfer
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # РЈРґР°Р»РёС‚Рµ СЌС‚Сѓ СЃС‚СЂРѕРєСѓ: - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:
+
+
+
+================================================================================
+ФАЙЛ: C:\Users\water\money-transfer-service\go.mod
+================================================================================
+
+module money-transfer-service
+
+go 1.24.0
+
+require (
+	github.com/go-chi/chi v1.5.5
+	github.com/go-redis/redis/v8 v8.11.5
+	github.com/golang-jwt/jwt v3.2.2+incompatible
+	github.com/google/uuid v1.6.0
+	github.com/joho/godotenv v1.5.1
+	github.com/lib/pq v1.10.9
+	golang.org/x/crypto v0.42.0
+)
+
+require (
+	github.com/cespare/xxhash/v2 v2.1.2 // indirect
+	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
+)
+
+
+
+
+================================================================================
+ФАЙЛ: C:\Users\water\money-transfer-service\go.sum
+================================================================================
+
+github.com/cespare/xxhash/v2 v2.1.2 h1:YRXhKfTDauu4ajMg1TPgFO5jnlC2HCbmLXMcTG5cbYE=
+github.com/cespare/xxhash/v2 v2.1.2/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
+github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f h1:lO4WD4F/rVNCu3HqELle0jiPLLBs70cWOduZpkS1E78=
+github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f/go.mod h1:cuUVRXasLTGF7a8hSLbxyZXjz+1KgoB3wDUb6vlszIc=
+github.com/fsnotify/fsnotify v1.4.9 h1:hsms1Qyu0jgnwNXIxa+/V/PDsU6CfLf6CNO8H7IWoS4=
+github.com/fsnotify/fsnotify v1.4.9/go.mod h1:znqG4EE+3YCdAaPaxE2ZRY/06pZUdp0tY4IgpuI1SZQ=
+github.com/go-chi/chi v1.5.5 h1:vOB/HbEMt9QqBqErz07QehcOKHaWFtuj87tTDVz2qXE=
+github.com/go-chi/chi v1.5.5/go.mod h1:C9JqLr3tIYjDOZpzn+BCuxY8z8vmca43EeMgyZt7irw=
+github.com/go-redis/redis/v8 v8.11.5 h1:AcZZR7igkdvfVmQTPnu9WE37LRrO/YrBH5zWyjDC0oI=
+github.com/go-redis/redis/v8 v8.11.5/go.mod h1:gREzHqY1hg6oD9ngVRbLStwAWKhA0FEgq8Jd4h5lpwo=
+github.com/golang-jwt/jwt v3.2.2+incompatible h1:IfV12K8xAKAnZqdXVzCZ+TOjboZ2keLg81eXfW3O+oY=
+github.com/golang-jwt/jwt v3.2.2+incompatible/go.mod h1:8pz2t5EyA70fFQQSrl6XZXzqecmYZeUEB8OUGHkxJ+I=
+github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
+github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
+github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=
+github.com/joho/godotenv v1.5.1/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
+github.com/lib/pq v1.10.9 h1:YXG7RB+JIjhP29X+OtkiDnYaXQwpS4JEWq7dtCCRUEw=
+github.com/lib/pq v1.10.9/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=
+github.com/nxadm/tail v1.4.8 h1:nPr65rt6Y5JFSKQO7qToXr7pePgD6Gwiw05lkbyAQTE=
+github.com/nxadm/tail v1.4.8/go.mod h1:+ncqLTQzXmGhMZNUePPaPqPvBxHAIsmXswZKocGu+AU=
+github.com/onsi/ginkgo v1.16.5 h1:8xi0RTUf59SOSfEtZMvwTvXYMzG4gV23XVHOZiXNtnE=
+github.com/onsi/ginkgo v1.16.5/go.mod h1:+E8gABHa3K6zRBolWtd+ROzc/U5bkGt0FwiG042wbpU=
+github.com/onsi/gomega v1.18.1 h1:M1GfJqGRrBrrGGsbxzV5dqM2U2ApXefZCQpkukxYRLE=
+github.com/onsi/gomega v1.18.1/go.mod h1:0q+aL8jAiMXy9hbwj2mr5GziHiwhAIQpFmmtT5hitRs=
+golang.org/x/crypto v0.42.0 h1:chiH31gIWm57EkTXpwnqf8qeuMUi0yekh6mT2AvFlqI=
+golang.org/x/crypto v0.42.0/go.mod h1:4+rDnOTJhQCx2q7/j6rAN5XDw8kPjeaXEUR2eL94ix8=
+golang.org/x/net v0.43.0 h1:lat02VYK2j4aLzMzecihNvTlJNQUq316m2Mr9rnM6YE=
+golang.org/x/net v0.43.0/go.mod h1:vhO1fvI4dGsIjh73sWfUVjj3N7CA9WkKJNQm2svM6Jg=
+golang.org/x/sys v0.36.0 h1:KVRy2GtZBrk1cBYA7MKu5bEZFxQk4NIDV6RLVcC8o0k=
+golang.org/x/sys v0.36.0/go.mod h1:OgkHotnGiDImocRcuBABYBEXf8A9a87e/uXjp9XT3ks=
+golang.org/x/text v0.29.0 h1:1neNs90w9YzJ9BocxfsQNHKuAT4pkghyXc4nhZ6sJvk=
+golang.org/x/text v0.29.0/go.mod h1:7MhJOA9CD2qZyOKYazxdYMF85OwPdEr9jTtBpO7ydH4=
+gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 h1:uRGJdciOHaEIrze2W8Q3AKkepLTh2hOroT7a+7czfdQ=
+gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7/go.mod h1:dt/ZhP58zS4L8KSrWDmTeBkI65Dw0HsyUHuEVlX15mw=
+gopkg.in/yaml.v2 v2.4.0 h1:D8xgwECY7CYvx+Y2n4sBz93Jn9JRvxdiyyo8CTfuKaY=
+gopkg.in/yaml.v2 v2.4.0/go.mod h1:RDklbk79AGWmwhnvt/jBztapEOGDOx6ZbXqjP6csGnQ=
+
+
+
+
+================================================================================
+ФАЙЛ: C:\Users\water\money-transfer-service\init.sql
+================================================================================
+
+-- Р”РѕР±Р°РІР»СЏРµРј С‚Р°Р±Р»РёС†Сѓ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
+CREATE TABLE IF NOT EXISTS users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    full_name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE IF NOT EXISTS transfers (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    from_account_id UUID REFERENCES accounts(id),
+    to_account_id UUID REFERENCES accounts(id),
+    amount DECIMAL(15, 2) NOT NULL,
+    currency VARCHAR(3) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- РћР±РЅРѕРІР»СЏРµРј С‚Р°Р±Р»РёС†Сѓ СЃС‡РµС‚РѕРІ, РґРѕР±Р°РІР»СЏРµРј user_id
+ALTER TABLE accounts ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES users(id);
+
+-- Р’СЃС‚Р°РІР»СЏРµРј С‚РµСЃС‚РѕРІС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
+INSERT INTO users (id, email, password_hash, full_name) VALUES
+('11111111-1111-1111-1111-111111111111', 'alice@example.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Alice Smith'),
+('22222222-2222-2222-2222-222222222222', 'bob@example.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Bob Johnson')
+ON CONFLICT (id) DO NOTHING;
+
+-- РћР±РЅРѕРІР»СЏРµРј СЃС‡РµС‚Р°, РґРѕР±Р°РІР»СЏСЏ user_id
+UPDATE accounts SET user_id = '11111111-1111-1111-1111-111111111111' WHERE id = '11111111-1111-1111-1111-111111111111';
+UPDATE accounts SET user_id = '22222222-2222-2222-2222-222222222222' WHERE id = '22222222-2222-2222-2222-222222222222';
+
+
+
+================================================================================
+ФАЙЛ: C:\Users\water\money-transfer-service\README.md
+================================================================================
+
+
+
+
+================================================================================
+ФАЙЛ: C:\Users\water\money-transfer-service\cmd\server\main.go
+================================================================================
+
+package main
+
+import (
+	"log"
+	"net/http"
+	"os"
+	"path/filepath"
+
+	"github.com/go-chi/chi"
+	"github.com/joho/godotenv"
+	"money-transfer-service/internal/cache"
+	"money-transfer-service/internal/handler"
+	"money-transfer-service/internal/middleware"
+	"money-transfer-service/internal/repository"
+	"money-transfer-service/internal/service"
+	"money-transfer-service/pkg/postgres"
+)
+
+func main() {
+	_ = godotenv.Load()
+
+	db, err := postgres.Connect(os.Getenv("DATABASE_URL"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	redisClient := cache.NewRedisClient(os.Getenv("REDIS_ADDR"))
+
+	repo := repository.NewRepository(db)
+	serv := service.NewService(repo, redisClient)
+	h := handler.NewHandler(serv)
+	authHandler := handler.NewAuthHandler(repo)
+
+	// РЎРѕР·РґР°РµРј СЂРѕСѓС‚РµСЂ
+	r := chi.NewRouter()
+
+	// Middleware Р»РѕРіРіРёСЂРѕРІР°РЅРёСЏ (РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РїРµСЂРІС‹Рј)
+	r.Use(func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			log.Printf("Request: %s %s", r.Method, r.URL.Path)
+			next.ServeHTTP(w, r)
+		})
+	})
+
+	// Serve static files
+	workDir, _ := os.Getwd()
+	filesDir := http.Dir(filepath.Join(workDir, "static"))
+	fileServer := http.FileServer(filesDir)
+
+	// РЎС‚Р°С‚РёС‡РµСЃРєРёРµ С„Р°Р№Р»С‹
+	r.Handle("/static/*", http.StripPrefix("/static/", fileServer))
+
+	// Р“Р»Р°РІРЅР°СЏ СЃС‚СЂР°РЅРёС†Р°
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/" {
+			http.ServeFile(w, r, filepath.Join(workDir, "static", "index.html"))
+			return
+		}
+		fileServer.ServeHTTP(w, r)
+	})
+
+	// Public routes
+	r.Post("/auth/register", authHandler.Register)
+	r.Post("/auth/login", authHandler.Login)
+
+	// Protected routes - СЃРѕР·РґР°РµРј РїРѕРґСЂРѕСѓС‚РµСЂ СЃ middleware Р°СѓС‚РµРЅС‚РёС„РёРєР°С†РёРё
+	r.Route("/api", func(r chi.Router) {
+		// Middleware Р°СѓС‚РµРЅС‚РёС„РёРєР°С†РёРё С‚РѕР»СЊРєРѕ РґР»СЏ API routes
+		r.Use(middleware.AuthMiddleware(repo))
+
+		r.Get("/balance", h.GetBalance)
+		r.Post("/transfer", h.TransferMoney)
+		r.Post("/deposit", h.DepositMoney)
+		r.Get("/transfers", h.GetTransfersHistory)
+	})
+
+	log.Println("Server starting on :8080")
+	log.Fatal(http.ListenAndServe(":8080", r))
+}
+
+
+
+
+================================================================================
+ФАЙЛ: C:\Users\water\money-transfer-service\internal\auth\jwt.go
+================================================================================
+
+package auth
+
+import (
+	"fmt"
+	"time"
+
+	"github.com/golang-jwt/jwt"
+	"golang.org/x/crypto/bcrypt"
+	"money-transfer-service/internal/models"
+)
+
+var JWTSecret = []byte("your-secret-key") // Р’ РїСЂРѕРґР°РєС€РµРЅРµ РёСЃРїРѕР»СЊР·СѓР№С‚Рµ РїРµСЂРµРјРµРЅРЅС‹Рµ РѕРєСЂСѓР¶РµРЅРёСЏ
+
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	return string(bytes), err
+}
+
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
+}
+
+func GenerateJWT(user models.User) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"user_id": user.ID.String(),
+		"email":   user.Email,
+		"exp":     time.Now().Add(time.Hour * 72).Unix(),
+	})
+
+	return token.SignedString(JWTSecret)
+}
+
+func ParseJWT(tokenString string) (*jwt.Token, error) {
+	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return JWTSecret, nil
+	})
+}
+
+
+
+
+================================================================================
+ФАЙЛ: C:\Users\water\money-transfer-service\internal\cache\redis.go
+================================================================================
+
+package cache
+
+import (
+	"context"
+	"fmt"
+	"time"
+
+	"github.com/go-redis/redis/v8"
+)
+
+type RedisClient struct {
+	client *redis.Client
+}
+
+func NewRedisClient(addr string) *RedisClient {
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     addr,
+		Password: "", // no password set
+		DB:       0,  // use default DB
+	})
+	return &RedisClient{client: rdb}
+}
+
+func (rc *RedisClient) Get(ctx context.Context, key string) (string, error) {
+	val, err := rc.client.Get(ctx, key).Result()
+	if err == redis.Nil {
+		return "", fmt.Errorf("key does not exist")
+	} else if err != nil {
+		return "", err
+	}
+	return val, nil
+}
+
+func (rc *RedisClient) Set(ctx context.Context, key string, value string, expiration time.Duration) error {
+	return rc.client.Set(ctx, key, value, expiration).Err()
+}
+
+
+
+
+================================================================================
+ФАЙЛ: C:\Users\water\money-transfer-service\internal\handler\auth.go
+================================================================================
+
+package handler
+
+import (
+	"encoding/json"
+	"net/http"
+
+	"money-transfer-service/internal/auth"
+	"money-transfer-service/internal/models"
+	"money-transfer-service/internal/repository"
+)
+
+type AuthHandler struct {
+	repo *repository.Repository
+}
+
+func NewAuthHandler(repo *repository.Repository) *AuthHandler {
+	return &AuthHandler{repo: repo}
+}
+
+func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
+	var req models.RegisterRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	// РџСЂРѕРІРµСЂСЏРµРј, СЃСѓС‰РµСЃС‚РІСѓРµС‚ Р»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ
+	existingUser, err := h.repo.GetUserByEmail(r.Context(), req.Email)
+	if err != nil {
+		http.Error(w, "Error checking user existence", http.StatusInternalServerError)
+		return
+	}
+	if existingUser != nil {
+		http.Error(w, "User already exists", http.StatusConflict)
+		return
+	}
+
+	// РҐСЌС€РёСЂСѓРµРј РїР°СЂРѕР»СЊ
+	hashedPassword, err := auth.HashPassword(req.Password)
+	if err != nil {
+		http.Error(w, "Error creating user", http.StatusInternalServerError)
+		return
+	}
+
+	// РЎРѕР·РґР°РµРј РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+	user, err := h.repo.CreateUser(r.Context(), req.Email, hashedPassword, req.FullName)
+	if err != nil {
+		http.Error(w, "Error creating user", http.StatusInternalServerError)
+		return
+	}
+
+	// РЎРѕР·РґР°РµРј СЃС‡РµС‚ РґР»СЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+	_, err = h.repo.CreateAccount(r.Context(), user.ID)
+	if err != nil {
+		http.Error(w, "Error creating account", http.StatusInternalServerError)
+		return
+	}
+
+	// Р“РµРЅРµСЂРёСЂСѓРµРј JWT С‚РѕРєРµРЅ
+	token, err := auth.GenerateJWT(*user)
+	if err != nil {
+		http.Error(w, "Error generating token", http.StatusInternalServerError)
+		return
+	}
+
+	response := models.AuthResponse{
+		Token: token,
+		User:  *user,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+}
+
+func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
+	var req models.LoginRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	// РС‰РµРј РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РїРѕ email
+	user, err := h.repo.GetUserByEmail(r.Context(), req.Email)
+	if err != nil {
+		http.Error(w, "Error finding user", http.StatusInternalServerError)
+		return
+	}
+	if user == nil {
+		http.Error(w, "Invalid credentials", http.StatusUnauthorized)
+		return
+	}
+
+	// РџСЂРѕРІРµСЂСЏРµРј РїР°СЂРѕР»СЊ
+	if !auth.CheckPasswordHash(req.Password, user.PasswordHash) {
+		http.Error(w, "Invalid credentials", http.StatusUnauthorized)
+		return
+	}
+
+	// Р“РµРЅРµСЂРёСЂСѓРµРј JWT С‚РѕРєРµРЅ
+	token, err := auth.GenerateJWT(*user)
+	if err != nil {
+		http.Error(w, "Error generating token", http.StatusInternalServerError)
+		return
+	}
+
+	response := models.AuthResponse{
+		Token: token,
+		User:  *user,
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+}
+
+
+
+
+================================================================================
+ФАЙЛ: C:\Users\water\money-transfer-service\internal\handler\handler.go
+================================================================================
+
+package handler
+
+import (
+	"encoding/json"
+	"log"
+	"net/http"
+
+	"github.com/google/uuid"
+
+	"money-transfer-service/internal/models"
+	"money-transfer-service/internal/service"
+)
+
+type Handler struct {
+	service *service.Service
+}
+
+func NewHandler(service *service.Service) *Handler {
+	return &Handler{service: service}
+}
+
+func (h *Handler) GetBalance(w http.ResponseWriter, r *http.Request) {
+	user, ok := r.Context().Value("user").(*models.User)
+	if !ok {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	// РџРѕР»СѓС‡Р°РµРј Р°РєРєР°СѓРЅС‚ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+	account, err := h.service.GetAccountByUserID(r.Context(), user.ID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"account_id": account.ID,
+		"balance":    account.Balance,
+		"currency":   "RUB",
+	})
+}
+
+func (h *Handler) TransferMoney(w http.ResponseWriter, r *http.Request) {
+	user, ok := r.Context().Value("user").(*models.User)
+	if !ok {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	var req struct {
+		ToEmail  string  `json:"to_email"`
+		Amount   float64 `json:"amount"`
+		Currency string  `json:"currency"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	if err := h.service.TransferMoneyByEmail(r.Context(), user.ID, req.ToEmail, req.Amount, req.Currency); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"message": "Transfer successful"})
+}
+func (h *Handler) GetTransfersHistory(w http.ResponseWriter, r *http.Request) {
+	// TODO: Р’ СЂРµР°Р»СЊРЅРѕРј РїСЂРёР»РѕР¶РµРЅРёРё РЅСѓР¶РЅРѕ РёР·РІР»РµРєР°С‚СЊ user_id РёР· JWT С‚РѕРєРµРЅР°
+	// РЎРµР№С‡Р°СЃ РёСЃРїРѕР»СЊР·СѓРµРј С…Р°СЂРґРєРѕРґ РґР»СЏ С‚РµСЃС‚РёСЂРѕРІР°РЅРёСЏ
+	transfers, err := h.service.GetTransfersHistory(r.Context(), uuid.MustParse("11111111-1111-1111-1111-111111111111"))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(transfers)
+}
+func (h *Handler) DepositMoney(w http.ResponseWriter, r *http.Request) {
+	log.Printf("DepositMoney handler called")
+
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var req struct {
+		AccountID string  `json:"account_id"`
+		Amount    float64 `json:"amount"`
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	log.Printf("Deposit request: account_id=%s, amount=%f", req.AccountID, req.Amount)
+
+	accountID, err := uuid.Parse(req.AccountID)
+	if err != nil {
+		http.Error(w, "Invalid account ID", http.StatusBadRequest)
+		return
+	}
+
+	if err := h.service.DepositMoney(r.Context(), accountID, req.Amount); err != nil {
+		log.Printf("Deposit error: %v", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"message": "Deposit successful"})
+}
+
+
+
+
+================================================================================
+ФАЙЛ: C:\Users\water\money-transfer-service\internal\handler\routes.go
+================================================================================
+
+package handler
+
+import (
+	"github.com/go-chi/chi"
+	"money-transfer-service/internal/middleware"
+	"money-transfer-service/internal/repository"
+)
+
+func (h *Handler) Routes(authHandler *AuthHandler, repo *repository.Repository) chi.Router {
+	r := chi.NewRouter()
+
+	// Public routes
+	r.Post("/auth/register", authHandler.Register)
+	r.Post("/auth/login", authHandler.Login)
+
+	// Protected routes
+	r.Group(func(r chi.Router) {
+		r.Use(middleware.AuthMiddleware(repo))
+
+		r.Get("/api/balance", h.GetBalance)
+		r.Post("/api/transfer", h.TransferMoney)
+		r.Get("/api/transfers", h.GetTransfersHistory)
+	})
+
+	return r
+}
+
+
+
+
+================================================================================
+ФАЙЛ: C:\Users\water\money-transfer-service\internal\middleware\auth.go
+================================================================================
+
+package middleware
+
+import (
+	"context"
+	"net/http"
+	"strings"
+
+	"github.com/golang-jwt/jwt"
+	"github.com/google/uuid"
+
+	"money-transfer-service/internal/auth"
+	"money-transfer-service/internal/repository"
+)
+
+func AuthMiddleware(repo *repository.Repository) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			authHeader := r.Header.Get("Authorization")
+			if authHeader == "" {
+				http.Error(w, "Authorization header required", http.StatusUnauthorized)
+				return
+			}
+
+			parts := strings.Split(authHeader, " ")
+			if len(parts) != 2 || parts[0] != "Bearer" {
+				http.Error(w, "Authorization header format must be: Bearer {token}", http.StatusUnauthorized)
+				return
+			}
+
+			token, err := auth.ParseJWT(parts[1])
+			if err != nil || !token.Valid {
+				http.Error(w, "Invalid token", http.StatusUnauthorized)
+				return
+			}
+
+			claims, ok := token.Claims.(jwt.MapClaims)
+			if !ok {
+				http.Error(w, "Invalid token claims", http.StatusUnauthorized)
+				return
+			}
+
+			userIDStr, ok := claims["user_id"].(string)
+			if !ok {
+				http.Error(w, "Invalid user ID in token", http.StatusUnauthorized)
+				return
+			}
+
+			userID, err := uuid.Parse(userIDStr)
+			if err != nil {
+				http.Error(w, "Invalid user ID format", http.StatusUnauthorized)
+				return
+			}
+
+			user, err := repo.GetUserByID(r.Context(), userID)
+			if err != nil {
+				http.Error(w, "Error finding user", http.StatusInternalServerError)
+				return
+			}
+			if user == nil {
+				http.Error(w, "User not found", http.StatusUnauthorized)
+				return
+			}
+
+			ctx := context.WithValue(r.Context(), "user", user)
+			next.ServeHTTP(w, r.WithContext(ctx))
+		})
+	}
+}
+
+
+
+
+================================================================================
+ФАЙЛ: C:\Users\water\money-transfer-service\internal\models\auth.go
+================================================================================
+
+package models
+
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
+
+type User struct {
+	ID           uuid.UUID `json:"id" db:"id"`
+	Email        string    `json:"email" db:"email"`
+	PasswordHash string    `json:"password_hash" db:"password_hash"`
+	FullName     string    `json:"full_name" db:"full_name"`
+	CreatedAt    time.Time `json:"created_at" db:"created_at"`
+}
+
+type RegisterRequest struct {
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required,min=6"`
+	FullName string `json:"full_name" validate:"required"`
+}
+
+type LoginRequest struct {
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required"`
+}
+
+type AuthResponse struct {
+	Token string `json:"token"`
+	User  User   `json:"user"`
+}
+
+
+
+
+================================================================================
+ФАЙЛ: C:\Users\water\money-transfer-service\internal\models\models.go
+================================================================================
+
+package models
+
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
+
+type Account struct {
+	ID      uuid.UUID `json:"id" db:"id"`
+	UserID  uuid.UUID `json:"user_id" db:"user_id"` // Р”РѕР±Р°РІСЊС‚Рµ СЌС‚Рѕ РїРѕР»Рµ
+	Balance float64   `json:"balance" db:"balance"`
+}
+
+type TransferRequest struct {
+	From     string  `json:"from"`
+	To       string  `json:"to"`
+	Amount   float64 `json:"amount"`
+	Currency string  `json:"currency"` // РќР°РїСЂРёРјРµСЂ: "USD", "EUR"
+}
+
+type Transfer struct {
+	ID        uuid.UUID `json:"id" db:"id"`
+	From      uuid.UUID `json:"from_account_id" db:"from_account_id"`
+	To        uuid.UUID `json:"to_account_id" db:"to_account_id"`
+	FromEmail string    `json:"from_email" db:"from_email"`
+	ToEmail   string    `json:"to_email" db:"to_email"`
+	Amount    float64   `json:"amount" db:"amount"`
+	Currency  string    `json:"currency" db:"currency"`
+	CreatedAt time.Time `json:"created_at" db:"created_at"`
+}
+
+
+
+
+================================================================================
+ФАЙЛ: C:\Users\water\money-transfer-service\internal\repository\repository.go
+================================================================================
+
+package repository
+
+import (
+	"context"
+	"database/sql"
+	"fmt"
+	"log"
+
+	"money-transfer-service/internal/models"
+
+	"github.com/google/uuid"
+)
+
+type Repository struct {
+	db *sql.DB
+}
+
+func (r *Repository) CreateTransfer(ctx context.Context, from, to uuid.UUID, amount float64, currency string) error {
+	_, err := r.db.ExecContext(ctx, `
+        INSERT INTO transfers (from_account_id, to_account_id, amount, currency)
+        VALUES ($1, $2, $3, $4)
+    `, from, to, amount, currency)
+	return err
+}
+
+func NewRepository(db *sql.DB) *Repository {
+	return &Repository{db: db}
+}
+func (r *Repository) DepositMoney(ctx context.Context, accountID uuid.UUID, amount float64) error {
+	log.Printf("Attempting to deposit %.2f to account %s", amount, accountID.String())
+
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	// РџСЂРѕРІРµСЂРёРј СЃСѓС‰РµСЃС‚РІРѕРІР°РЅРёРµ СЃС‡РµС‚Р°
+	var exists bool
+	err = tx.QueryRowContext(ctx, "SELECT EXISTS(SELECT 1 FROM accounts WHERE id = $1)", accountID).Scan(&exists)
+	if err != nil {
+		log.Printf("Error checking account existence: %v", err)
+		return err
+	}
+
+	if !exists {
+		return fmt.Errorf("account not found")
+	}
+
+	// Р’С‹РїРѕР»РЅРёРј РїРѕРїРѕР»РЅРµРЅРёРµ
+	result, err := tx.ExecContext(ctx, `
+        UPDATE accounts 
+        SET balance = balance + $1 
+        WHERE id = $2
+    `, amount, accountID)
+
+	if err != nil {
+		log.Printf("Deposit error: %v", err)
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		log.Printf("Error getting rows affected: %v", err)
+		return err
+	}
+
+	log.Printf("Rows affected: %d", rowsAffected)
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("account not found")
+	}
+
+	// Р—Р°С„РёРєСЃРёСЂСѓРµРј С‚СЂР°РЅР·Р°РєС†РёСЋ
+	if err := tx.Commit(); err != nil {
+		log.Printf("Error committing transaction: %v", err)
+		return err
+	}
+
+	log.Printf("Deposit successful")
+	return nil
+}
+
+// Р”РѕР±Р°РІР»СЏРµРј РјРµС‚РѕРґС‹ РёРЅС‚РµСЂС„РµР№СЃР°
+func (r *Repository) GetUserByEmail(ctx context.Context, email string) (*models.User, error) {
+	var user models.User
+	err := r.db.QueryRowContext(ctx, `
+        SELECT id, email, password_hash, full_name, created_at 
+        FROM users WHERE email = $1
+    `, email).Scan(&user.ID, &user.Email, &user.PasswordHash, &user.FullName, &user.CreatedAt)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
+func (r *Repository) GetUserByID(ctx context.Context, id uuid.UUID) (*models.User, error) {
+	var user models.User
+	err := r.db.QueryRowContext(ctx, `
+        SELECT id, email, password_hash, full_name, created_at 
+        FROM users WHERE id = $1
+    `, id).Scan(&user.ID, &user.Email, &user.PasswordHash, &user.FullName, &user.CreatedAt)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
+func (r *Repository) CreateUser(ctx context.Context, email, passwordHash, fullName string) (*models.User, error) {
+	var user models.User
+	err := r.db.QueryRowContext(ctx, `
+        INSERT INTO users (email, password_hash, full_name) 
+        VALUES ($1, $2, $3)
+        RETURNING id, email, password_hash, full_name, created_at
+    `, email, passwordHash, fullName).Scan(&user.ID, &user.Email, &user.PasswordHash, &user.FullName, &user.CreatedAt)
+
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
+func (r *Repository) CreateAccount(ctx context.Context, userID uuid.UUID) (*models.Account, error) {
+	var account models.Account
+	err := r.db.QueryRowContext(ctx, `
+        INSERT INTO accounts (user_id, balance) 
+        VALUES ($1, $2)
+        RETURNING id, user_id, balance
+    `, userID, 0.00).Scan(&account.ID, &account.UserID, &account.Balance)
+
+	if err != nil {
+		return nil, err
+	}
+	return &account, nil
+}
+func (r *Repository) GetAccountByUserID(ctx context.Context, userID uuid.UUID) (*models.Account, error) {
+	var account models.Account
+	err := r.db.QueryRowContext(ctx, `
+        SELECT id, user_id, balance 
+        FROM accounts 
+        WHERE user_id = $1
+    `, userID).Scan(&account.ID, &account.UserID, &account.Balance)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return &account, nil
+}
+
+func (r *Repository) GetAccountByEmail(ctx context.Context, email string) (*models.Account, error) {
+	var account models.Account
+	err := r.db.QueryRowContext(ctx, `
+        SELECT a.id, a.user_id, a.balance 
+        FROM accounts a
+        JOIN users u ON a.user_id = u.id
+        WHERE u.email = $1
+    `, email).Scan(&account.ID, &account.UserID, &account.Balance)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return &account, nil
+}
+
+func (r *Repository) GetTransfersByAccount(ctx context.Context, accountID uuid.UUID) ([]models.Transfer, error) {
+	query := `
+        SELECT t.id, t.from_account_id, t.to_account_id, t.amount, t.currency, t.created_at,
+               u1.email as from_email, u2.email as to_email
+        FROM transfers t
+        LEFT JOIN accounts a1 ON t.from_account_id = a1.id
+        LEFT JOIN users u1 ON a1.user_id = u1.id
+        LEFT JOIN accounts a2 ON t.to_account_id = a2.id
+        LEFT JOIN users u2 ON a2.user_id = u2.id
+        WHERE t.from_account_id = $1 OR t.to_account_id = $1
+        ORDER BY t.created_at DESC
+    `
+
+	rows, err := r.db.QueryContext(ctx, query, accountID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var transfers []models.Transfer
+	for rows.Next() {
+		var t models.Transfer
+		err := rows.Scan(
+			&t.ID,
+			&t.From,
+			&t.To,
+			&t.Amount,
+			&t.Currency,
+			&t.CreatedAt,
+			&t.FromEmail,
+			&t.ToEmail,
+		)
+		if err != nil {
+			return nil, err
+		}
+		transfers = append(transfers, t)
+	}
+	return transfers, nil
+}
+
+// РћСЃС‚Р°Р»СЊРЅС‹Рµ РјРµС‚РѕРґС‹...
+
+func (r *Repository) GetBalance(ctx context.Context, id uuid.UUID) (float64, error) {
+	// Р РµР°Р»РёР·Р°С†РёСЏ Р±СѓРґРµС‚ РІ postgres.go
+	return 0, nil
+}
+
+func (r *Repository) TransferMoney(ctx context.Context, from, to uuid.UUID, amount float64, currency string) error {
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	// РџСЂРѕРІРµСЂСЏРµРј Р±Р°Р»Р°РЅСЃ РѕС‚РїСЂР°РІРёС‚РµР»СЏ
+	var currentBalance float64
+	err = tx.QueryRowContext(ctx, "SELECT balance FROM accounts WHERE id = $1 FOR UPDATE", from).Scan(&currentBalance)
+	if err != nil {
+		return err
+	}
+	if currentBalance < amount {
+		return fmt.Errorf("insufficient funds")
+	}
+
+	// РЎРїРёСЃР°РЅРёРµ СЃСЂРµРґСЃС‚РІ
+	_, err = tx.ExecContext(ctx, "UPDATE accounts SET balance = balance - $1 WHERE id = $2", amount, from)
+	if err != nil {
+		return err
+	}
+
+	// Р—Р°С‡РёСЃР»РµРЅРёРµ СЃСЂРµРґСЃС‚РІ
+	_, err = tx.ExecContext(ctx, "UPDATE accounts SET balance = balance + $1 WHERE id = $2", amount, to)
+	if err != nil {
+		return err
+	}
+
+	// Р—Р°РїРёСЃСЊ Рѕ РїРµСЂРµРІРѕРґРµ
+	_, err = tx.ExecContext(ctx, `
+        INSERT INTO transfers (from_account_id, to_account_id, amount, currency)
+        VALUES ($1, $2, $3, $4)
+    `, from, to, amount, currency)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+
+
+
+================================================================================
+ФАЙЛ: C:\Users\water\money-transfer-service\internal\service\service.go
+================================================================================
+
+package service
+
+import (
+	"context"
+	"fmt"
+	"strconv"
+	"time"
+
+	"github.com/google/uuid"
+	"money-transfer-service/internal/cache"
+	"money-transfer-service/internal/models"
+	"money-transfer-service/internal/repository"
+)
+
+type Service struct {
+	repo  *repository.Repository
+	cache *cache.RedisClient
+}
+
+func (s *Service) GetTransfersHistory(ctx context.Context, accountID uuid.UUID) ([]models.Transfer, error) {
+	return s.repo.GetTransfersByAccount(ctx, accountID)
+}
+func NewService(repo *repository.Repository, cache *cache.RedisClient) *Service {
+	return &Service{repo: repo, cache: cache}
+}
+
+func (s *Service) GetBalance(ctx context.Context, accountID uuid.UUID) (float64, error) {
+	return s.repo.GetBalance(ctx, accountID)
+}
+func (s *Service) DepositMoney(ctx context.Context, accountID uuid.UUID, amount float64) error {
+	if amount <= 0 {
+		return fmt.Errorf("amount must be positive")
+	}
+	return s.repo.DepositMoney(ctx, accountID, amount)
+}
+func (s *Service) TransferMoney(ctx context.Context, req models.TransferRequest) error {
+	fromID, err := uuid.Parse(req.From)
+	if err != nil {
+		return fmt.Errorf("invalid from account ID")
+	}
+	toID, err := uuid.Parse(req.To)
+	if err != nil {
+		return fmt.Errorf("invalid to account ID")
+	}
+
+	amountInRUB := req.Amount
+	if req.Currency != "RUB" {
+		rate, err := s.getExchangeRate(ctx, req.Currency)
+		if err != nil {
+			return fmt.Errorf("failed to get exchange rate: %w", err)
+		}
+		amountInRUB = req.Amount * rate
+	}
+
+	// РџРµСЂРµРґР°РµРј РІР°Р»СЋС‚Сѓ РєР°Рє 5-Р№ Р°СЂРіСѓРјРµРЅС‚
+	return s.repo.TransferMoney(ctx, fromID, toID, amountInRUB, req.Currency)
+}
+
+func (s *Service) TransferMoneyByEmail(ctx context.Context, fromUserID uuid.UUID, toEmail string, amount float64, currency string) error {
+	fromAccount, err := s.repo.GetAccountByUserID(ctx, fromUserID)
+	if err != nil {
+		return err
+	}
+
+	toAccount, err := s.repo.GetAccountByEmail(ctx, toEmail)
+	if err != nil {
+		return err
+	}
+
+	amountInRUB := amount
+	if currency != "RUB" {
+		rate, err := s.getExchangeRate(ctx, currency)
+		if err != nil {
+			return fmt.Errorf("failed to get exchange rate: %w", err)
+		}
+		amountInRUB = amount * rate
+	}
+
+	// РџРµСЂРµРґР°РµРј РІР°Р»СЋС‚Сѓ РєР°Рє 5-Р№ Р°СЂРіСѓРјРµРЅС‚
+	return s.repo.TransferMoney(ctx, fromAccount.ID, toAccount.ID, amountInRUB, currency)
+}
+
+func (s *Service) getExchangeRate(ctx context.Context, currency string) (float64, error) {
+	cachedRate, err := s.cache.Get(ctx, currency)
+	if err == nil {
+		return strconv.ParseFloat(cachedRate, 64)
+	}
+
+	// Р—Р°РіР»СѓС€РєР°. Р’ СЂРµР°Р»СЊРЅРѕРј РїСЂРѕРµРєС‚Рµ Р·РґРµСЃСЊ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РІС‹Р·РѕРІ РІРЅРµС€РЅРµРіРѕ API.
+	rates := map[string]float64{
+		"USD": 90.0,
+		"EUR": 100.0,
+	}
+	rate, ok := rates[currency]
+	if !ok {
+		return 0, fmt.Errorf("currency not supported")
+	}
+
+	// РљСЌС€РёСЂСѓРµРј РєСѓСЂСЃ РЅР° 5 РјРёРЅСѓС‚
+	err = s.cache.Set(ctx, currency, fmt.Sprintf("%f", rate), 5*time.Minute)
+	if err != nil {
+		return 0, err
+	}
+
+	return rate, nil
+}
+func (s *Service) GetAccountByUserID(ctx context.Context, userID uuid.UUID) (*models.Account, error) {
+	return s.repo.GetAccountByUserID(ctx, userID)
+}
+
+
+
+
+================================================================================
+ФАЙЛ: C:\Users\water\money-transfer-service\pkg\postgres\postgres.go
+================================================================================
+
+package postgres
+
+import (
+	"context"
+	"database/sql"
+	"fmt"
+	"github.com/google/uuid"
+	_ "github.com/lib/pq"
+)
+
+func Connect(dataSourceName string) (*sql.DB, error) {
+	db, err := sql.Open("postgres", dataSourceName)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open database: %w", err)
+	}
+
+	if err := db.Ping(); err != nil {
+		return nil, fmt.Errorf("failed to ping database: %w", err)
+	}
+
+	return db, nil
+}
+
+type PostgresRepository struct {
+	db *sql.DB
+}
+
+func NewPostgresRepository(db *sql.DB) *PostgresRepository {
+	return &PostgresRepository{db: db}
+}
+
+func (r *PostgresRepository) GetBalance(ctx context.Context, id uuid.UUID) (float64, error) {
+	var balance float64
+	err := r.db.QueryRowContext(ctx, "SELECT balance FROM accounts WHERE id = $1", id).Scan(&balance)
+	if err != nil {
+		return 0, fmt.Errorf("error getting balance: %w", err)
+	}
+	return balance, nil
+}
+
+func (r *PostgresRepository) TransferMoney(ctx context.Context, from, to uuid.UUID, amount float64, currency string) error {
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	var currentBalance float64
+	err = tx.QueryRowContext(ctx, "SELECT balance FROM accounts WHERE id = $1 FOR UPDATE", from).Scan(&currentBalance)
+	if err != nil {
+		return err
+	}
+	if currentBalance < amount {
+		return fmt.Errorf("insufficient funds")
+	}
+
+	_, err = tx.ExecContext(ctx, "UPDATE accounts SET balance = balance - $1 WHERE id = $2", amount, from)
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.ExecContext(ctx, "UPDATE accounts SET balance = balance + $1 WHERE id = $2", amount, to)
+	if err != nil {
+		return err
+	}
+
+	// Р”РѕР±Р°РІСЊС‚Рµ Р·Р°РїРёСЃСЊ РІ С‚Р°Р±Р»РёС†Сѓ transfers
+	_, err = tx.ExecContext(ctx, `
+        INSERT INTO transfers (from_account_id, to_account_id, amount, currency)
+        VALUES ($1, $2, $3, $4)
+    `, from, to, amount, currency)
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
+}
+
+
+
+
+================================================================================
+ФАЙЛ: C:\Users\water\money-transfer-service\static\index.html
+================================================================================
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Money Transfer Service</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Money Transfer Service</h1>
+            <div id="auth-buttons">
+                <button onclick="showLogin()">Р’С…РѕРґ</button>
+                <button onclick="showRegister()">Р РµРіРёСЃС‚СЂР°С†РёСЏ</button>
+            </div>
+            <div id="user-info" style="display: none;">
+                <span id="user-name"></span>
+                <button onclick="logout()">Р’С‹С…РѕРґ</button>
+            </div>
+        </header>
+
+        <main>
+            <div id="auth-forms">
+                <div id="login-form" class="form-container">
+                    <h2>Р’С…РѕРґ</h2>
+                    <form onsubmit="login(event)">
+                        <input type="email" id="login-email" placeholder="Email" required>
+                        <input type="password" id="login-password" placeholder="РџР°СЂРѕР»СЊ" required>
+                        <button type="submit">Р’РѕР№С‚Рё</button>
+                    </form>
+                </div>
+
+                <div id="register-form" class="form-container" style="display: none;">
+                    <h2>Р РµРіРёСЃС‚СЂР°С†РёСЏ</h2>
+                    <form onsubmit="register(event)">
+                        <input type="text" id="register-fullname" placeholder="РџРѕР»РЅРѕРµ РёРјСЏ" required>
+                        <input type="email" id="register-email" placeholder="Email" required>
+                        <input type="password" id="register-password" placeholder="РџР°СЂРѕР»СЊ" required>
+                        <button type="submit">Р—Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°С‚СЊСЃСЏ</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="dashboard" style="display: none;">
+                <div class="balance-section">
+                    <h2>Р’Р°С€ Р±Р°Р»Р°РЅСЃ</h2>
+                    <div id="balance-amount">0.00 RUB</div>
+                </div>
+                <div class="deposit-section">
+                    <h2>РџРѕРїРѕР»РЅРµРЅРёРµ СЃС‡РµС‚Р°</h2>
+                    <form onsubmit="depositMoney(event)">
+                        <input type="text" id="deposit-account-id" placeholder="ID СЃС‡РµС‚Р°" required>
+                        <input type="number" id="deposit-amount" placeholder="РЎСѓРјРјР°" min="0.01" step="0.01" required>
+                        <button type="submit">РџРѕРїРѕР»РЅРёС‚СЊ</button>
+                    </form>
+                </div>
+                <div class="transfer-section">
+                    <h2>РџРµСЂРµРІРѕРґ СЃСЂРµРґСЃС‚РІ</h2>
+                    <form onsubmit="transferMoney(event)">
+                        <input type="email" id="recipient-email" placeholder="Email РїРѕР»СѓС‡Р°С‚РµР»СЏ" required>
+                        <input type="number" id="transfer-amount" placeholder="РЎСѓРјРјР°" min="0.01" step="0.01" required>
+                        <select id="transfer-currency">
+                            <option value="RUB">RUB</option>
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                        </select>
+                        <button type="submit">РџРµСЂРµРІРµСЃС‚Рё</button>
+                    </form>
+                </div>
+
+                <div class="history-section">
+                    <h2>РСЃС‚РѕСЂРёСЏ РїРµСЂРµРІРѕРґРѕРІ</h2>
+                    <div id="transfers-history"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
+
+
+
+================================================================================
+ФАЙЛ: C:\Users\water\money-transfer-service\static\css\style.css
+================================================================================
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 30px;
+}
+
+h1 {
+    color: #2c3e50;
+}
+
+.form-container {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.form-container h2 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #2c3e50;
+}
+
+.form-container input,
+.form-container select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.form-container button {
+    width: 100%;
+    padding: 12px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.form-container button:hover {
+    background-color: #2980b9;
+}
+
+.balance-section {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+#balance-amount {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #27ae60;
+}
+
+.transfer-section {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.history-section {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.transfer-item {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+}
+
+.transfer-item:last-child {
+    border-bottom: none;
+}
+
+.transfer-positive {
+    color: #27ae60;
+}
+
+.transfer-negative {
+    color: #e74c3c;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+#auth-buttons button,
+#user-info button {
+    margin-left: 10px;
+}
+
+.deposit-section {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.deposit-section h2 {
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+.deposit-section input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.deposit-section button {
+    width: 100%;
+    padding: 12px;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.deposit-section button:hover {
+    background-color: #219a52;
+}
+
+
+
+================================================================================
+ФАЙЛ: C:\Users\water\money-transfer-service\static\js\app.js
+================================================================================
+
+const API_BASE = '';
+
+let currentUser = null;
+let authToken = null;
+
+// РџСЂРѕРІРµСЂСЏРµРј, РµСЃС‚СЊ Р»Рё СЃРѕС…СЂР°РЅРµРЅРЅС‹Р№ С‚РѕРєРµРЅ РїСЂРё Р·Р°РіСЂСѓР·РєРµ
+document.addEventListener('DOMContentLoaded', () => {
+    const savedToken = localStorage.getItem('authToken');
+    const savedUser = localStorage.getItem('user');
+    
+    if (savedToken && savedUser) {
+        authToken = savedToken;
+        currentUser = JSON.parse(savedUser);
+        showDashboard();
+        loadUserData();
+    }
+});
+
+// Р¤СѓРЅРєС†РёРё РґР»СЏ РїРѕРєР°Р·Р°/СЃРєСЂС‹С‚РёСЏ С„РѕСЂРј
+function showLogin() {
+    document.getElementById('login-form').style.display = 'block';
+    document.getElementById('register-form').style.display = 'none';
+}
+
+function showRegister() {
+    document.getElementById('login-form').style.display = 'none';
+    document.getElementById('register-form').style.display = 'block';
+}
+
+function showDashboard() {
+    document.getElementById('auth-forms').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    document.getElementById('auth-buttons').style.display = 'none';
+    document.getElementById('user-info').style.display = 'block';
+    document.getElementById('user-name').textContent = currentUser.full_name;
+}
+
+function showAuthForms() {
+    document.getElementById('auth-forms').style.display = 'block';
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('auth-buttons').style.display = 'block';
+    document.getElementById('user-info').style.display = 'none';
+}
+
+
+// Р РѕР±РЅРѕРІРёС‚Рµ С„СѓРЅРєС†РёСЋ apiRequest:
+async function apiRequest(url, options = {}) {
+    const fullUrl = url.startsWith('http') ? url : `http://localhost:8080${url}`;
+    
+    const headers = {
+        'Content-Type': 'application/json',
+        ...options.headers,
+    };
+    
+    if (authToken) {
+        headers['Authorization'] = `Bearer ${authToken}`;
+    }
+    
+    try {
+        const response = await fetch(fullUrl, {
+            ...options,
+            headers,
+        });
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(errorText || `HTTP error ${response.status}`);
+        }
+        
+        return response.json();
+    } catch (error) {
+        console.error('API request failed:', error);
+        throw error;
+    }
+}
+
+// РСЃРїСЂР°РІР»СЏРµРј С„СѓРЅРєС†РёРё СЂРµРіРёСЃС‚СЂР°С†РёРё Рё РІС…РѕРґР°
+async function register(event) {
+    event.preventDefault();
+    
+    const fullName = document.getElementById('register-fullname').value;
+    const email = document.getElementById('register-email').value;
+    const password = document.getElementById('register-password').value;
+    
+    try {
+        const response = await apiRequest('/auth/register', { // РЈР±СЂР°Р»Рё /api/
+            method: 'POST',
+            body: JSON.stringify({ 
+                email: email, 
+                password: password, 
+                full_name: fullName 
+            }),
+        });
+        
+        authToken = response.token;
+        currentUser = response.user;
+        
+        localStorage.setItem('authToken', authToken);
+        localStorage.setItem('user', JSON.stringify(currentUser));
+        
+        showDashboard();
+        loadUserData();
+    } catch (error) {
+        alert('РћС€РёР±РєР° СЂРµРіРёСЃС‚СЂР°С†РёРё: ' + error.message);
+        console.error('Register error:', error);
+    }
+}
+
+async function login(event) {
+    event.preventDefault();
+    
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    
+    try {
+        const response = await apiRequest('/auth/login', { // РЈР±СЂР°Р»Рё /api/
+            method: 'POST',
+            body: JSON.stringify({ email: email, password: password }),
+        });
+        
+        authToken = response.token;
+        currentUser = response.user;
+        
+        localStorage.setItem('authToken', authToken);
+        localStorage.setItem('user', JSON.stringify(currentUser));
+        
+        showDashboard();
+        loadUserData();
+    } catch (error) {
+        alert('РћС€РёР±РєР° РІС…РѕРґР°: ' + error.message);
+        console.error('Login error:', error);
+    }
+}
+
+function logout() {
+    authToken = null;
+    currentUser = null;
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('user');
+    showAuthForms();
+}
+
+// Р¤СѓРЅРєС†РёРё РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РґР°РЅРЅС‹РјРё
+async function loadUserData() {
+    try {
+        const balanceData = await apiRequest('/api/balance');
+        document.getElementById('balance-amount').textContent = 
+            `${balanceData.balance.toFixed(2)} ${balanceData.currency}`;
+        
+        const transfers = await apiRequest('/api/transfers');
+        renderTransfers(transfers);
+    } catch (error) {
+        console.error('РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё РґР°РЅРЅС‹С…:', error);
+    }
+}
+
+async function transferMoney(event) {
+    event.preventDefault();
+    
+    const recipientEmail = document.getElementById('recipient-email').value;
+    const amount = parseFloat(document.getElementById('transfer-amount').value);
+    const currency = document.getElementById('transfer-currency').value;
+    
+    try {
+        await apiRequest('/api/transfer', {
+            method: 'POST',
+            body: JSON.stringify({
+                to_email: recipientEmail,
+                amount,
+                currency
+            }),
+        });
+        
+        alert('РџРµСЂРµРІРѕРґ РІС‹РїРѕР»РЅРµРЅ СѓСЃРїРµС€РЅРѕ!');
+        document.getElementById('recipient-email').value = '';
+        document.getElementById('transfer-amount').value = '';
+        
+        loadUserData();
+    } catch (error) {
+        alert('РћС€РёР±РєР° РїРµСЂРµРІРѕРґР°: ' + error.message);
+    }
+}
+
+function renderTransfers(transfers) {
+    const container = document.getElementById('transfers-history');
+    container.innerHTML = '';
+    
+    if (transfers.length === 0) {
+        container.innerHTML = '<p>РќРµС‚ РѕРїРµСЂР°С†РёР№</p>';
+        return;
+    }
+    
+    transfers.forEach(transfer => {
+        const div = document.createElement('div');
+        div.className = 'transfer-item';
+        
+        const isOutgoing = transfer.from_account_id === currentUser.id;
+        const amountClass = isOutgoing ? 'transfer-negative' : 'transfer-positive';
+        const amountPrefix = isOutgoing ? '-' : '+';
+        
+        div.innerHTML = `
+            <div>
+                <strong>${isOutgoing ? 'РљРѕРјСѓ' : 'РћС‚'}:</strong> 
+                ${isOutgoing ? transfer.to_email : transfer.from_email}
+            </div>
+            <div class="${amountClass}">
+                ${amountPrefix}${transfer.amount} ${transfer.currency}
+            </div>
+            <div>${new Date(transfer.created_at).toLocaleDateString()}</div>
+        `;
+        
+        container.appendChild(div);
+    });
+}
+
+

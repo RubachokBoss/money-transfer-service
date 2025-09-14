@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Money Transfer Service</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Money Transfer Service</h1>
+            <div id="auth-buttons">
+                <button onclick="showLogin()">Вход</button>
+                <button onclick="showRegister()">Регистрация</button>
+            </div>
+            <div id="user-info" style="display: none;">
+                <span id="user-name"></span>
+                <button onclick="logout()">Выход</button>
+            </div>
+        </header>
+
+        <main>
+            <div id="auth-forms">
+                <div id="login-form" class="form-container">
+                    <h2>Вход</h2>
+                    <form onsubmit="login(event)">
+                        <input type="email" id="login-email" placeholder="Email" required>
+                        <input type="password" id="login-password" placeholder="Пароль" required>
+                        <button type="submit">Войти</button>
+                    </form>
+                </div>
+
+                <div id="register-form" class="form-container" style="display: none;">
+                    <h2>Регистрация</h2>
+                    <form onsubmit="register(event)">
+                        <input type="text" id="register-fullname" placeholder="Полное имя" required>
+                        <input type="email" id="register-email" placeholder="Email" required>
+                        <input type="password" id="register-password" placeholder="Пароль" required>
+                        <button type="submit">Зарегистрироваться</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="dashboard" style="display: none;">
+                <div class="balance-section">
+                    <h2>Ваш баланс</h2>
+                    <div id="balance-amount">0.00 RUB</div>
+                </div>
+                <div class="deposit-section">
+                    <h2>Пополнение счета</h2>
+                    <form onsubmit="depositMoney(event)">
+                        <input type="number" id="deposit-amount" placeholder="Сумма" min="0.01" step="0.01" required>
+                        <button type="submit">Пополнить</button>
+                    </form>
+                </div>
+                <div class="transfer-section">
+                    <h2>Перевод средств</h2>
+                    <form onsubmit="transferMoney(event)">
+                        <input type="email" id="recipient-email" placeholder="Email получателя" required>
+                        <input type="number" id="transfer-amount" placeholder="Сумма" min="0.01" step="0.01" required>
+                        <select id="transfer-currency">
+                            <option value="RUB">RUB</option>
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                        </select>
+                        <button type="submit">Перевести</button>
+                    </form>
+                </div>
+
+                <div class="history-section">
+                    <h2>История переводов</h2>
+                    <div id="transfers-history"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
